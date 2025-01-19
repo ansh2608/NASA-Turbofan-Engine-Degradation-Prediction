@@ -99,6 +99,3 @@ The model performance is evaluated using the following metrics:
 
 ## Conclusion
 This project demonstrates how machine learning models can be applied to predict the remaining useful life (RUL) of turbofan engines. Predicting RUL can help in predictive maintenance, reducing downtime, and avoiding catastrophic engine failures.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
