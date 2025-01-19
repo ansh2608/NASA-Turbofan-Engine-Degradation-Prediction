@@ -28,7 +28,6 @@ The dataset includes the following files:
 - **test_FD001.txt**: Test data with sensor readings and engine cycles.
 - **RUL_FD001.txt**: Remaining Useful Life (RUL) for each engine in the test dataset.
 
-The dataset is publicly available from the [NASA Prognostics Data Repository](https://data.nasa.gov/dataset/).
 
 ## Methodology
 
