@@ -1,101 +1,75 @@
 # NASA Turbofan Engine Degradation Prediction
 
-## Overview
-This project aims to predict the Remaining Useful Life (RUL) of turbofan engines using machine learning models. The dataset used is the [NASA Turbofan Engine Degradation Dataset](https://data.nasa.gov/dataset/Turbofan-Engine-Degradation-Simulation-Data-Set/ks2z-gb2f), which contains data on sensors from engines and their corresponding failure cycles.
+This project aims to predict the Remaining Useful Life (RUL) of turbofan engines using sensor data from the NASA Turbofan Engine Degradation Dataset. The goal is to build a predictive model that can help in proactive maintenance by predicting when an engine is likely to fail, thus improving operational efficiency and reducing downtime.
 
-## Objective
-The primary objective is to build a machine learning model that predicts the remaining useful life (RUL) of an engine based on sensor data. The steps include data preprocessing, feature engineering, model training, evaluation, and visualization of results.
+## Table of Contents
 
-## Dataset Description
+- [Introduction](#introduction)
+- [Dataset](#dataset)
+- [Methodology](#methodology)
+- [Model Training](#model-training)
+- [Results](#results)
+  - [Actual vs Predicted RUL](#actual-vs-predicted-rul)
+  - [Feature Importance Analysis](#feature-importance-analysis)
+- [Installation](#installation)
+- [License](#license)
+
+## Introduction
+
+The NASA Turbofan Engine Degradation Dataset consists of several sensor readings from turbofan engines under different operational conditions. By predicting the Remaining Useful Life (RUL) of the engines, we can estimate the lifespan of the engine and help to take maintenance actions beforehand, which will save costs and improve system reliability.
+
+In this project, I have implemented a machine learning solution using a **Random Forest Regressor** to predict the RUL of engines.
+
+## Dataset
+
 The dataset includes the following files:
-- `train_FD001.txt`: Training data containing sensor measurements for different engines.
-- `test_FD001.txt`: Test data containing sensor measurements for different engines.
-- `RUL_FD001.txt`: Ground truth for the RUL values of the engines.
 
-## Technologies Used
-- **Python 3.x**
-- **Google Colab** (for running the code)
-- **Libraries**:
-  - `pandas` for data manipulation
-  - `numpy` for numerical operations
-  - `matplotlib` and `seaborn` for data visualization
-  - `sklearn` for machine learning
+- **train_FD001.txt**: Training data with sensor readings and engine cycles.
+- **test_FD001.txt**: Test data with sensor readings and engine cycles.
+- **RUL_FD001.txt**: Remaining Useful Life (RUL) for each engine in the test dataset.
 
-## How to Run the Code
-1. **Clone or Download the Repository**:
-   - If you have the project in a GitHub repository, you can clone it using the following command:
-     ```bash
-     git clone <repository-url>
-     ```
-   - Alternatively, you can download the repository as a ZIP file and extract it.
+The dataset is publicly available from the [NASA Prognostics Data Repository](https://data.nasa.gov/dataset/).
 
-2. **Set Up Google Colab**:
-   - Open Google Colab and upload your dataset to Google Drive.
-   - Mount your Google Drive using the following code in a Colab cell:
-     ```python
-     from google.colab import drive
-     drive.mount('/content/drive')
-     ```
+## Methodology
 
-3. **Data Preprocessing**:
-   - Load the dataset using pandas and clean the data (drop columns with low variance, rename columns, and normalize sensor data).
-   - The following code loads and preprocesses the dataset:
-     ```python
-     train_data = pd.read_csv('/content/drive/MyDrive/Colab Notebooks/train_FD001.txt', sep=' ', header=None).iloc[:, :-1]
-     test_data = pd.read_csv('/content/drive/MyDrive/Colab Notebooks/test_FD001.txt', sep=' ', header=None).iloc[:, :-1]
-     rul_data = pd.read_csv('/content/drive/MyDrive/Colab Notebooks/RUL_FD001.txt', header=None)
-     ```
+The project follows the steps below:
 
-4. **Model Training**:
-   - Train a Random Forest Regressor to predict the RUL of engines based on sensor data:
-     ```python
-     model = RandomForestRegressor(n_estimators=100, random_state=42)
-     model.fit(X_train, y_train)
-     ```
+1. **Data Loading**: The dataset is loaded into the environment, including training, test, and RUL data.
+2. **Data Preprocessing**: 
+   - Columns are renamed for clarity.
+   - The Remaining Useful Life (RUL) is computed by subtracting the cycle number from the maximum cycle for each engine.
+   - Low-variance sensors are dropped to improve model efficiency.
+3. **Data Normalization**: Sensor values are scaled between 0 and 1 using MinMaxScaler to improve model performance.
+4. **Model Training**: A Random Forest Regressor is trained on the preprocessed data to predict the RUL of engines.
+5. **Evaluation**: The model’s performance is evaluated using metrics such as **Root Mean Squared Error (RMSE)** and **R^2 Score**.
 
-5. **Prediction and Evaluation**:
-   - Make predictions using the trained model and evaluate its performance:
-     ```python
-     y_pred = model.predict(X_test)
-     ```
+## Model Training
 
-   - Evaluate the model using metrics like RMSE and R^2 score:
-     ```python
-     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-     r2 = r2_score(y_test, y_pred)
-     ```
+The model used in this project is the **Random Forest Regressor**, which is an ensemble machine learning algorithm. It has the following configuration:
 
-6. **Visualizations**:
-   - Visualize actual vs predicted RUL values:
-     ```python
-     plt.figure(figsize=(10, 6))
-     plt.scatter(y_test, y_pred, alpha=0.7, color='b')
-     plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], '--r', linewidth=2)
-     plt.xlabel('Actual RUL')
-     plt.ylabel('Predicted RUL')
-     plt.title('Actual vs Predicted RUL')
-     plt.grid(True)
-     plt.show()
-     ```
+- **n_estimators**: 100 (number of trees in the forest)
+- **random_state**: 42 (for reproducibility)
 
-   - Visualize feature importance:
-     ```python
-     feature_importance = model.feature_importances_
-     plt.figure(figsize=(12, 6))
-     sns.barplot(x=feature_importance, y=X_train.columns)
-     plt.title('Feature Importance from Random Forest')
-     plt.show()
-     ```
+The model is trained on the processed sensor data to predict the RUL of the engines.
 
-## Evaluation Metrics
-The model performance is evaluated using the following metrics:
-- **Root Mean Squared Error (RMSE)**: Measures the average magnitude of errors in the predictions.
-- **R^2 Score**: Indicates how well the model is able to predict the RUL.
+## Results
 
-## Future Improvements
-- Try other models (e.g., XGBoost, LSTM) for potentially better performance.
-- Perform hyperparameter tuning using techniques like Grid Search or Random Search.
-- Experiment with more feature engineering (e.g., adding rolling statistics, additional features from the sensor data).
+### Actual vs Predicted RUL
 
-## Conclusion
-This project demonstrates how machine learning models can be applied to predict the remaining useful life (RUL) of turbofan engines. Predicting RUL can help in predictive maintenance, reducing downtime, and avoiding catastrophic engine failures.
+The plot below shows a comparison between the actual and predicted Remaining Useful Life (RUL) of engines in the test dataset. The closer the predicted values are to the actual values, the better the model’s performance.
+
+![Actual vs Predicted RUL](https://github.com/ansh2608/NASA-Turbofan-Engine-Degradation-Prediction/blob/933f8668e47842e20f4eb61801a7d9d6041be6ab/Actual%20vs%20Predicted.png)
+
+### Feature Importance Analysis
+
+The plot below shows the importance of each sensor feature in predicting the Remaining Useful Life (RUL). Sensor features with higher importance contribute more to the model’s predictions.
+
+![Feature Importance Analysis](https://github.com/ansh2608/NASA-Turbofan-Engine-Degradation-Prediction/blob/933f8668e47842e20f4eb61801a7d9d6041be6ab/Feature%20Importance%20Analysis.png)
+
+## Installation
+
+To run this project locally, you need to clone the repository and install the required dependencies.
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ansh2608/NASA-Turbofan-Engine-Degradation-Prediction.git
