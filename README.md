@@ -12,7 +12,6 @@ This project aims to predict the Remaining Useful Life (RUL) of turbofan engines
   - [Actual vs Predicted RUL](#actual-vs-predicted-rul)
   - [Feature Importance Analysis](#feature-importance-analysis)
 - [Installation](#installation)
-- [License](#license)
 
 ## Introduction
 
